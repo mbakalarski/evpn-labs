@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
 example usage:
-python yaml_to_mermaid.py topology.yaml -o topology_styled.mmd -d LR
+python3 ../utils/mermaid-colors-shapes-direction.py topology_evpn_mh.yaml -o mermaid4-TD.mmd -d TD
 """
 
 import yaml
