@@ -11,12 +11,23 @@ topology:
   - name: s11
   - name: s12
   - name: s13
+  - name: s21
+  - name: s22
   - name: l1
   - name: l2
   - name: l3
   - name: l4
   - name: l5
   nodes:
+  - name: superspine1
+    type: srlinux
+    memory: 2Gi
+    cpu: 500m
+    interfaces:
+    - name: e1-1
+      network: s21
+    - name: e1-2
+      network: s22
   - name: spine1
     type: srlinux
     memory: 2Gi
@@ -28,6 +39,8 @@ topology:
       network: s2
     - name: e1-3
       network: s3
+    - name: e1-4
+      network: s21
   - name: spine2
     type: srlinux
     memory: 2Gi
@@ -39,6 +52,8 @@ topology:
       network: s12
     - name: e1-3
       network: s13
+    - name: e1-4
+      network: s22
   - name: leaf1
     type: srlinux
     memory: 2Gi
