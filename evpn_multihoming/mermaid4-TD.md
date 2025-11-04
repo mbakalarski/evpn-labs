@@ -1,4 +1,4 @@
-```
+```mermaid
 graph TD
     %% Auto-generated network topology diagram (networks as invisible nodes)
 
