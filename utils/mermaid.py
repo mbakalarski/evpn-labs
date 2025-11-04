@@ -20,7 +20,7 @@ def generate_mermaid_from_yaml(yaml_file):
             network = interface['network']
             if network not in nodes:
                 nodes[network] = network
-            mermaid_code += f"    {node_name} --> {network} : {interface['name']}\n"
+            mermaid_code += f"    {node_name} --> {network}\n"
 
     return mermaid_code
 

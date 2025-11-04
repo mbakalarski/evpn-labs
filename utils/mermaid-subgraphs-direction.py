@@ -47,7 +47,7 @@ def generate_mermaid_from_yaml(yaml_file, direction="TD"):
         for net in networks:
             code += f"        subgraph {net}\n"
             for (node, iface) in network_links[net]:
-                code += f"            {node} --> {net} : {iface}\n"
+                code += f"            {node} --> {net}\n"
             code += "        end\n"
         code += "    end\n\n"
         return code
