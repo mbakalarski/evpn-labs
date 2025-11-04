@@ -1,0 +1,48 @@
+topology:
+  default_network:
+    name: b0
+    subnet: 172.20.20.0/24
+    gateway: 172.20.20.254
+  networks:
+  - name: s1
+  - name: s2
+  - name: l1
+  - name: l2
+  nodes:
+  - name: spine1
+    type: srlinux
+    memory: 2Gi
+    cpu: 500m
+    interfaces:
+    - name: e1-1
+      network: s1
+    - name: e1-2
+      network: s2
+  - name: leaf1
+    type: srlinux
+    memory: 2Gi
+    cpu: 500m
+    interfaces:
+    - name: e1-49
+      network: s1
+    - name: e1-1
+      network: l1
+  - name: leaf2
+    type: srlinux
+    memory: 2Gi
+    cpu: 500m
+    interfaces:
+    - name: e1-49
+      network: s2
+    - name: e1-1
+      network: l2
+  - name: srv1
+    type: linux
+    interfaces:
+    - name: eth1
+      network: l1
+  - name: srv2
+    type: linux
+    interfaces:
+    - name: eth1
+      network: l2

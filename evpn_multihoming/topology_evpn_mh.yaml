@@ -1,0 +1,76 @@
+topology:
+  default_network:
+    name: b0
+    subnet: 172.20.20.0/24
+    gateway: 172.20.20.254
+    private_destinations_only: false
+  networks:
+  - name: s1
+  - name: s2
+  - name: s3
+  - name: l1
+  - name: l2
+  - name: l3
+  - name: l4
+  - name: l5
+  nodes:
+  - name: spine1
+    type: srlinux
+    memory: 2Gi
+    cpu: 500m
+    interfaces:
+    - name: e1-1
+      network: s1
+    - name: e1-2
+      network: s2
+    - name: e1-3
+      network: s3
+  - name: leaf1
+    type: srlinux
+    memory: 2Gi
+    cpu: 500m
+    interfaces:
+    - name: e1-49
+      network: s1
+    - name: e1-1
+      network: l1
+  - name: leaf2
+    type: srlinux
+    memory: 2Gi
+    cpu: 500m
+    interfaces:
+    - name: e1-49
+      network: s2
+    - name: e1-1
+      network: l2
+  - name: leaf3
+    type: srlinux
+    memory: 2Gi
+    cpu: 500m
+    interfaces:
+    - name: e1-49
+      network: s3
+    - name: e1-1
+      network: l3
+    - name: e1-2
+      network: l4
+    - name: e1-3
+      network: l5
+  - name: ce1
+    type: linux
+    image: alpine/curl:8.14.1
+    interfaces:
+    - name: eth1
+      network: l1
+    - name: eth2
+      network: l2
+  - name: ce2
+    type: linux
+    image: alpine/curl:8.14.1
+    interfaces:
+    - name: eth1
+      network: l3
+    - name: eth2
+      network: l4
+    - name: eth3
+      network: l5
