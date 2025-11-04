@@ -1,5 +1,5 @@
-```
-graph TD
+```mermaid
+graph LR
     %% Auto-generated network topology diagram (networks as invisible nodes)
 
     classDef srlinux fill:#b3d9ff,stroke:#003366,stroke-width:2px;
