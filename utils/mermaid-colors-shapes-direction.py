@@ -14,7 +14,7 @@ def generate_mermaid_from_yaml(yaml_file, direction="TD"):
         data = yaml.safe_load(file)
 
     mermaid_code = f"graph {direction}\n"
-    mermaid_code += "    %% Auto-generated network topology diagram with styles\n\n"
+    mermaid_code += "    %% Auto-generated GitHub-compatible network topology diagram\n\n"
 
     network_links = defaultdict(list)
     node_types = {}
@@ -27,8 +27,7 @@ def generate_mermaid_from_yaml(yaml_file, direction="TD"):
 
         for iface in node.get("interfaces", []):
             net = iface["network"]
-            intf = iface["name"]
-            network_links[net].append((node_name, intf))
+            network_links[net].append(node_name)
 
     # Categorize networks
     spine_leaf_networks = [n for n in network_links if n.startswith("s")]
@@ -37,33 +36,30 @@ def generate_mermaid_from_yaml(yaml_file, direction="TD"):
         n for n in network_links if not (n.startswith("s") or n.startswith("l"))
     ]
 
-    # Define node styles (GitHub supports these)
-    mermaid_code += "    %% Define node styles\n"
+    # Node styles
     mermaid_code += "    classDef srlinux fill:#b3d9ff,stroke:#003366,stroke-width:2px;\n"
     mermaid_code += "    classDef linux fill:#b3ffb3,stroke:#006600,stroke-width:2px;\n"
     mermaid_code += "    classDef network fill:#fff5b3,stroke:#b38f00,stroke-width:1px,shape:circle;\n\n"
 
-    # Helper to render subgraph
-    def render_subgraph(title, networks):
+    # Helper to render connections (without subgraphs per network)
+    def render_connections(title, networks):
         code = f"    subgraph {title}\n"
         for net in networks:
-            code += f"        subgraph {net}\n"
-            for (node, iface) in network_links[net]:
-                code += f"            {node} --> {net}\n"
-            code += "        end\n"
+            for node in network_links[net]:
+                code += f"        {node} --> {net}\n"
         code += "    end\n\n"
         return code
 
     # Render groups
     if spine_leaf_networks:
-        mermaid_code += render_subgraph("Spine_Leaf_Networks", spine_leaf_networks)
+        mermaid_code += render_connections("Spine_Leaf_Networks", spine_leaf_networks)
     if leaf_ce_networks:
-        mermaid_code += render_subgraph("Leaf_CE_Networks", leaf_ce_networks)
+        mermaid_code += render_connections("Leaf_CE_Networks", leaf_ce_networks)
     if other_networks:
-        mermaid_code += render_subgraph("Other_Networks", other_networks)
+        mermaid_code += render_connections("Other_Networks", other_networks)
 
-    # Apply node class styles
-    mermaid_code += "    %% Assign classes to nodes\n"
+    # Assign node styles
+    mermaid_code += "    %% Assign node styles\n"
     for node, ntype in node_types.items():
         if ntype == "srlinux":
             mermaid_code += f"    class {node} srlinux;\n"
@@ -72,7 +68,6 @@ def generate_mermaid_from_yaml(yaml_file, direction="TD"):
         else:
             mermaid_code += f"    class {node} network;\n"
 
-    # Apply style to networks
     for net in network_links.keys():
         mermaid_code += f"    class {net} network;\n"
 
@@ -81,7 +76,7 @@ def generate_mermaid_from_yaml(yaml_file, direction="TD"):
 
 def main():
     parser = argparse.ArgumentParser(
-        description="Convert network topology YAML into a styled Mermaid diagram for GitHub."
+        description="Convert network topology YAML into a GitHub-renderable Mermaid diagram."
     )
     parser.add_argument("input", help="Input YAML topology file")
     parser.add_argument(
