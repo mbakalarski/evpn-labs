@@ -19,6 +19,15 @@ topology:
   - name: l4
   - name: l5
   nodes:
+  - name: superspine1
+    type: srlinux
+    memory: 2Gi
+    cpu: 500m
+    interfaces:
+    - name: e1-1
+      network: s21
+    - name: e1-2
+      network: s22
   - name: spine1
     type: srlinux
     memory: 2Gi
@@ -100,12 +109,3 @@ topology:
       network: l4
     - name: eth3
       network: l5
-  - name: superspine1
-    type: srlinux
-    memory: 2Gi
-    cpu: 500m
-    interfaces:
-    - name: e1-1
-      network: s21
-    - name: e1-2
-      network: s22
