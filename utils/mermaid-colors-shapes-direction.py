@@ -2,7 +2,16 @@
 """
 example usage:
 python3 ../utils/mermaid-colors-shapes-direction.py topology_evpn_mh.yaml -o mermaid4-TD.mmd -d TD
+
+- Networks as edge labels → no extra nodes.
+- Device nodes only → spine, leaf, CE.
+- Dual-theme colors:
+- srlinux → blue
+- linux/CE → orange (ce)
+- GitHub-compatible Mermaid.
+- Configurable layout direction (TD, LR, BT, RL).
 """
+
 
 import yaml
 import argparse
@@ -27,8 +36,7 @@ def generate_mermaid_with_edge_labels(yaml_file, direction="TD"):
         src = node["name"]
         for iface in node.get("interfaces", []):
             net = iface["network"]
-            # Edge from src -> network -> other nodes? We just label edge with network
-            # Find all other nodes connected to same network
+            # Connect to all other nodes on the same network
             for other_node in data["topology"]["nodes"]:
                 dst = other_node["name"]
                 if dst == src:
@@ -43,16 +51,19 @@ def generate_mermaid_with_edge_labels(yaml_file, direction="TD"):
     for src, dst, net in edges:
         mermaid_code += f"    {src} -->|{net}| {dst}\n"
 
-    # Node styles
+    # Node styles (light & dark theme friendly)
     mermaid_code += "\n    %% Node styles\n"
-    mermaid_code += "    classDef srlinux fill:#b3d9ff,stroke:#003366,stroke-width:2px;\n"
-    mermaid_code += "    classDef linux fill:#b3ffb3,stroke:#006600,stroke-width:2px;\n"
+    mermaid_code += "    classDef srlinux fill:#4da6ff,stroke:#003366,stroke-width:2px,color:#000000;\n"
+    mermaid_code += "    classDef linux fill:#66ff66,stroke:#006600,stroke-width:2px,color:#000000;\n"
+    mermaid_code += "    classDef ce fill:#ffcc66,stroke:#994d00,stroke-width:2px,color:#000000;\n"
 
+    # Assign node classes
     for node, ntype in node_types.items():
         if ntype == "srlinux":
             mermaid_code += f"    class {node} srlinux;\n"
         elif ntype == "linux":
-            mermaid_code += f"    class {node} linux;\n"
+            # Optional: assign CE style
+            mermaid_code += f"    class {node} ce;\n"
 
     return mermaid_code
 
